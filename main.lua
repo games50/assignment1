@@ -2,9 +2,6 @@
     GD50 2018
     Flappy Bird Remake
 
-    bird12
-    "The Mouse Update"
-
     Author: Colton Ogden
     cogden@cs50.harvard.edu
 
@@ -35,6 +32,7 @@ Class = require 'class'
 -- game states smoothly and avoid monolithic code in one file
 require 'StateMachine'
 
+-- all states our StateMachine can transition between
 require 'states/BaseState'
 require 'states/CountdownState'
 require 'states/PlayState'
@@ -63,9 +61,6 @@ local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 
 local BACKGROUND_LOOPING_POINT = 413
-
--- global variable we can use to scroll the map
-scrolling = true
 
 function love.load()
     -- initialize our nearest-neighbor filter
@@ -143,6 +138,10 @@ function love.mousepressed(x, y, button)
     love.mouse.buttonsPressed[button] = true
 end
 
+--[[
+    Custom function to extend LÖVE's input handling; returns whether a given
+    key was set to true in our input table this frame.
+]]
 function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
 end
@@ -155,10 +154,9 @@ function love.mouse.wasPressed(button)
 end
 
 function love.update(dt)
-    if scrolling then
-        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
-    end
+    -- scroll our background and ground, looping back to 0 after a certain amount
+    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
     gStateMachine:update(dt)
 

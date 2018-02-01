@@ -1,9 +1,5 @@
 --[[
-    GD50 2018
-    Match-3 Remake
-
-    -- BaseState Class --
-
+    BaseState Class
     Author: Colton Ogden
     cogden@cs50.harvard.edu
 
