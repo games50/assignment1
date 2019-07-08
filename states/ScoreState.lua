@@ -34,4 +34,17 @@ function ScoreState:render()
     love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
 
     love.graphics.printf('Press Enter to Play Again!', 0, 160, VIRTUAL_WIDTH, 'center')
+
+
+    -- based off of the score recieved render the appropriate trophy
+    if self.score > 10 then
+        trophy = Trophy('gold.png')
+        trophy:render()
+    elseif self.score > 5 then
+        trophy = Trophy('silver.png')
+        trophy:render()
+    elseif self.score > 2 then
+        trophy = Trophy('bronze.png')
+        trophy:render()
+    end
 end

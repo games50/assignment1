@@ -10,7 +10,7 @@
 
 Bird = Class{}
 
--- I am so bad at the game I needed to make it easier to properly test
+-- i am so bad at the game I needed to make it easier to properly test
 local GRAVITY =  10 --20
 
 function Bird:init()

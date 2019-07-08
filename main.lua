@@ -28,6 +28,20 @@ push = require 'push'
 -- https://github.com/vrld/hump/blob/master/class.lua
 Class = require 'class'
 
+-- physical screen dimensions
+WINDOW_WIDTH = 1280
+WINDOW_HEIGHT = 720
+
+-- virtual resolution dimensions
+VIRTUAL_WIDTH = 512
+VIRTUAL_HEIGHT = 288
+
+-- require the class files
+require 'Trophy'
+require 'Bird'
+require 'Pipe'
+require 'PipePair'
+
 -- a basic StateMachine class which will allow us to transition to and from
 -- game states smoothly and avoid monolithic code in one file
 require 'StateMachine'
@@ -36,20 +50,10 @@ require 'StateMachine'
 require 'states/BaseState'
 require 'states/CountdownState'
 require 'states/PlayState'
+require 'states/PauseState'
 require 'states/ScoreState'
 require 'states/TitleScreenState'
 
-require 'Bird'
-require 'Pipe'
-require 'PipePair'
-
--- physical screen dimensions
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
-
--- virtual resolution dimensions
-VIRTUAL_WIDTH = 512
-VIRTUAL_HEIGHT = 288
 
 local background = love.graphics.newImage('background.png')
 local backgroundScroll = 0
@@ -61,6 +65,7 @@ local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 
 local BACKGROUND_LOOPING_POINT = 413
+
 
 function love.load()
     -- initialize our nearest-neighbor filter
@@ -85,6 +90,7 @@ function love.load()
         ['explosion'] = love.audio.newSource('explosion.wav', 'static'),
         ['hurt'] = love.audio.newSource('hurt.wav', 'static'),
         ['score'] = love.audio.newSource('score.wav', 'static'),
+        ['pause'] = love.audio.newSource('pause.wav', 'static'),
 
         -- https://freesound.org/people/xsgianni/sounds/388079/
         ['music'] = love.audio.newSource('marios_way.mp3', 'static')
@@ -106,7 +112,8 @@ function love.load()
         ['title'] = function() return TitleScreenState() end,
         ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
-        ['score'] = function() return ScoreState() end
+        ['score'] = function() return ScoreState() end,
+        ['pause'] = function() return PauseState() end
     }
     gStateMachine:change('title')
 

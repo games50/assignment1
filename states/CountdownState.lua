@@ -13,6 +13,8 @@ CountdownState = Class{__includes = BaseState}
 -- takes 1 second to count down each time
 COUNTDOWN_TIME = 0.75
 
+
+
 function CountdownState:init()
     self.count = 3
     self.timer = 0
@@ -34,7 +36,7 @@ function CountdownState:update(dt)
 
         -- when 0 is reached, we should enter the PlayState
         if self.count == 0 then
-            gStateMachine:change('play')
+            gStateMachine:change('play', {timer = -1})
         end
     end
 end
