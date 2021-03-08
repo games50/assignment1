@@ -27,12 +27,15 @@ function PlayState:init()
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20
 end
 
+gGame = PlayState()
+
 function PlayState:update(dt)
     -- update timer for pipe spawning
     self.timer = self.timer + dt
 
     -- spawn a new pipe pair every second and a half
-    if self.timer > 2 then
+    -- create pipes randomly between 2 and 100 dt instead of just 2 dt
+    if self.timer > math.random(2, 100) then
         -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
         -- no higher than 10 pixels below the top edge of the screen,
         -- and no lower than a gap length (90 pixels) from the bottom
@@ -41,7 +44,7 @@ function PlayState:update(dt)
         self.lastY = y
 
         -- add a new pipe pair at the end of the screen at our new Y
-        table.insert(self.pipePairs, PipePair(y))
+        table.insert(self.pipePairs, PipePair(y, math.random(70, 120)))
 
         -- reset timer
         self.timer = 0
@@ -99,6 +102,11 @@ function PlayState:update(dt)
             score = self.score
         })
     end
+    
+    -- if p key is pressed then change gamestate to pause and pass the current game's object
+    if love.keyboard.wasPressed('p') then
+        gStateMachine:change('pause', self)
+    end
 end
 
 function PlayState:render()
@@ -112,14 +120,21 @@ function PlayState:render()
     self.bird:render()
 end
 
---[[
-    Called when this state is transitioned to from another state.
-]]
-function PlayState:enter()
-    -- if we're coming from death, restart scrolling
+
+
+function PlayState:enter(params)
+    -- timer variable used to check if we are entering from countdown state or pause state
+    timer = params.timer
+    -- if from pause state then load in the current game
+    if timer > -1 then
+        self.bird = params.bird
+        self.score = params.score
+        self.pipePairs = params.pipePairs
+        self.timer = params.timer
+        self.lastY = params.lastY
+    end
     scrolling = true
 end
-
 --[[
     Called when this state changes to another state.
 ]]
